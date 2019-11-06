@@ -1,37 +1,84 @@
 <?php
 require_once ('sql.php');
 
-$sql = 'SELECT questionid,rightanswer,responsesummary,questionsummary FROM mdl_question_attempts ORDER BY questionid';
+$sql = 'SELECT questionid,rightanswer,questionsummary FROM mdl_question_attempts GROUP BY questionid';
+$sql2= 'SELECT questionid,responsesummary,questionsummary FROM mdl_question_attempts ORDER BY questionid';
 
 $stmt = $dbh->query ( $sql );
+$stmt2 = $dbh->query ( $sql2 );
 $right_answer_count = 0;
 $wrong_answer_count = 0;
 $null_answer_count = 0;
-//$answer_count=array();
+$answer = array();
 
+function array_flatten($array) {
+	if (!is_array($array)) {
+		return FALSE;
+	}
+	$result = array();
+	foreach ($array as $key3 => $val) {
+		if (is_array($val)) {
+			$result = array_merge($result, array_flatten($val));
+		}
+		else {
+			$result[$key3] = $val;
+		}
+	}
+	return $result;
+}
 //echo '<tr><th>テスト番号</th><th>正答</th><th>解答</th></tr>';
 
 while ($result = $stmt->fetch ( PDO::FETCH_ASSOC ) ) {
 	echo $result['questionsummary'];
 	echo '<table border=2>';
 	$right_answer = explode ( ';', $result ['rightanswer'] );
-	$all_answer = explode ( ';', $result ['responsesummary'] );
+	//$all_answer = explode ( ';', $result ['responsesummary'] );
 
 	foreach ($right_answer as $key => $value_right_answer ) {
-		echo"<tr>";
+		echo "<tr>";
 		echo "<td>".$value_right_answer."</td>";
 		echo "</tr>";
 	}
-	$all_answer = explode ( ';', $result ['responsesummary'] );
-	$answer_count = array_count_values($result = $stmt->fetch ( PDO::FETCH_ASSOC ));
+	echo '</table>';
+}
+echo '<br>';
+echo '解答<br>';
+while ($result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
+	$all_answer = explode ( ';', $result2 ['responsesummary'] );
+	$answer[]=$all_answer;
+	//var_dump($result2['responsesummary']);
+	echo '<table border=2>';
+	//var_dump($all_answer);
+	//$answer_count = array_count_values($result = $stmt->fetch ( PDO::FETCH_ASSOC ));
+	foreach($all_answer as $key => $value_all_answer){
 
-	foreach ( $all_answer as $key => $value_all_answer ) {
+		//$counter = array_count_values($all_answer);
+		//print_r($counter);
+			echo "<tr>";
+			echo "<td>".$result2['questionid'];
+			echo "<td>".$value_all_answer."</td>";
+			echo "</tr>";
 
-		echo"<tr>";
-		echo "<td>".$value_all_answer."</td>";
-		echo "<td>".$wrong_answer_count."</td>";
-		echo "</tr>";
-	}
+		}
+		echo '</table>';
+}
+//var_dump($answer);
+//echo"<br>";
+$answer = array_flatten($answer);
+//var_dump($answer);
+$counter = array_count_values($answer);
+print_r($counter);
+foreach($counter as $key4 => $value_all_answer2){
+	echo "<table border=2>";
+	echo "<tr>";
+	echo "<td>".$key4."</td>";
+	echo "<td>".$value_all_answer2."</td>";
+	echo "</tr>";
+	echo "</table>";
+}
+
+
+/*
 	echo '</table>';
 	var_dump($right_answer);
 	echo "<br>";
@@ -47,6 +94,7 @@ while ($result = $stmt->fetch ( PDO::FETCH_ASSOC ) ) {
 
 	var_dump($right_answer_count);
 	echo "<br>";
+*/
 
-}
+
 

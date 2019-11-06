@@ -1,5 +1,6 @@
 <?php
 require_once ('sql.php');
+$questionid = $_GET['questionid'];
 
 $sql = 'SELECT questionid FROM mdl_question_attempts GROUP BY questionid';
 $stmt = $dbh->query ( $sql );
