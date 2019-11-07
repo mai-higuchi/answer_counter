@@ -1,14 +1,16 @@
 <?php
 require_once ('sql.php');
+$questionid = $_GET['questionid'];
 
-$sql = 'SELECT questionid,rightanswer,questionsummary FROM mdl_question_attempts GROUP BY questionid';
-$sql2= 'SELECT questionid,responsesummary,questionsummary FROM mdl_question_attempts ORDER BY questionid';
+
+$sql = "SELECT questionid,rightanswer,questionsummary FROM mdl_question_attempts WHERE questionid='$questionid' GROUP BY questionid";
+$sql2= "SELECT questionid,responsesummary,questionsummary FROM mdl_question_attempts WHERE questionid = '$questionid'";
 
 $stmt = $dbh->query ( $sql );
 $stmt2 = $dbh->query ( $sql2 );
-$right_answer_count = 0;
-$wrong_answer_count = 0;
-$null_answer_count = 0;
+//$right_answer_count = 0;
+//$wrong_answer_count = 0;
+//$null_answer_count = 0;
 $answer = array();
 
 function array_flatten($array) {
@@ -41,26 +43,27 @@ while ($result = $stmt->fetch ( PDO::FETCH_ASSOC ) ) {
 	}
 	echo '</table>';
 }
+
 echo '<br>';
 echo '解答<br>';
 while ($result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 	$all_answer = explode ( ';', $result2 ['responsesummary'] );
 	$answer[]=$all_answer;
 	//var_dump($result2['responsesummary']);
-	echo '<table border=2>';
+	//echo '<table border=2>';
 	//var_dump($all_answer);
 	//$answer_count = array_count_values($result = $stmt->fetch ( PDO::FETCH_ASSOC ));
-	foreach($all_answer as $key => $value_all_answer){
+	//foreach($all_answer as $key => $value_all_answer){
 
 		//$counter = array_count_values($all_answer);
 		//print_r($counter);
-			echo "<tr>";
-			echo "<td>".$result2['questionid'];
-			echo "<td>".$value_all_answer."</td>";
-			echo "</tr>";
+			//echo "<tr>";
+			//echo "<td>".$result2['questionid'];
+			//echo "<td>".$value_all_answer."</td>";
+			//echo "</tr>";
 
-		}
-		echo '</table>';
+		//}
+		//echo '</table>';
 }
 //var_dump($answer);
 //echo"<br>";
@@ -68,14 +71,15 @@ $answer = array_flatten($answer);
 //var_dump($answer);
 $counter = array_count_values($answer);
 print_r($counter);
+echo "<table border=2>";
 foreach($counter as $key4 => $value_all_answer2){
-	echo "<table border=2>";
 	echo "<tr>";
 	echo "<td>".$key4."</td>";
 	echo "<td>".$value_all_answer2."</td>";
 	echo "</tr>";
-	echo "</table>";
+
 }
+echo "</table>";
 
 
 /*
