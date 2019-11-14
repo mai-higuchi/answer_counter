@@ -1,18 +1,22 @@
 <?php
-require_once ('sql.php');
+require_once ('sql.php');  //接続
 $questionid = $_GET['questionid'];
+$testid = $_GET['testid']; //id取得
 
-
+//SQL
 $sql = "SELECT questionid,rightanswer,questionsummary FROM mdl_question_attempts WHERE questionid='$questionid' GROUP BY questionid";
-$sql2= "SELECT questionid,responsesummary,questionsummary FROM mdl_question_attempts WHERE questionid = '$questionid'";
-
+$sql2= "SELECT questionid,responsesummary,questionsummary FROM mdl_question_attempts WHERE questionid = '$questionid' ORDER BY responsesummary";
+$i=0;
 $stmt = $dbh->query ( $sql );
 $stmt2 = $dbh->query ( $sql2 );
-//$right_answer_count = 0;
-//$wrong_answer_count = 0;
-//$null_answer_count = 0;
+$part_answer=array();
+$first_answer=array();
 $answer = array();
-
+$answer2 = array();
+$first_answer2 = array();
+$first_answer3 = array();
+$first_answer4 = array();
+//解答データをすべて配列の中に入れるメソッド
 function array_flatten($array) {
 	if (!is_array($array)) {
 		return FALSE;
@@ -21,20 +25,21 @@ function array_flatten($array) {
 	foreach ($array as $key3 => $val) {
 		if (is_array($val)) {
 			$result = array_merge($result, array_flatten($val));
-		}
-		else {
+		} else {
 			$result[$key3] = $val;
 		}
 	}
 	return $result;
 }
-//echo '<tr><th>テスト番号</th><th>正答</th><th>解答</th></tr>';
+echo "テスト".$testid."<br>";
 
+//正答表作成
 while ($result = $stmt->fetch ( PDO::FETCH_ASSOC ) ) {
-	echo $result['questionsummary'];
+	echo "問題<br>";
+	echo "<th>".$result['questionsummary']."</th>";
+
 	echo '<table border=2>';
 	$right_answer = explode ( ';', $result ['rightanswer'] );
-	//$all_answer = explode ( ';', $result ['responsesummary'] );
 
 	foreach ($right_answer as $key => $value_right_answer ) {
 		echo "<tr>";
@@ -42,63 +47,118 @@ while ($result = $stmt->fetch ( PDO::FETCH_ASSOC ) ) {
 		echo "</tr>";
 	}
 	echo '</table>';
-}
 
+}
+//解答データの分割
 echo '<br>';
-echo '解答<br>';
+echo '解答集計結果<br>';
 while ($result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 	$all_answer = explode ( ';', $result2 ['responsesummary'] );
 	$answer[]=$all_answer;
-	//var_dump($result2['responsesummary']);
-	//echo '<table border=2>';
-	//var_dump($all_answer);
-	//$answer_count = array_count_values($result = $stmt->fetch ( PDO::FETCH_ASSOC ));
-	//foreach($all_answer as $key => $value_all_answer){
+	echo "all_answer:";
+	var_dump($all_answer);
+	echo "<br>";
 
-		//$counter = array_count_values($all_answer);
-		//print_r($counter);
-			//echo "<tr>";
-			//echo "<td>".$result2['questionid'];
-			//echo "<td>".$value_all_answer."</td>";
-			//echo "</tr>";
+	echo "count";
+	var_dump(count($all_answer));
+	echo "<br>";
 
-		//}
-		//echo '</table>';
-}
-//var_dump($answer);
-//echo"<br>";
-$answer = array_flatten($answer);
-//var_dump($answer);
-$counter = array_count_values($answer);
-print_r($counter);
-echo "<table border=2>";
-foreach($counter as $key4 => $value_all_answer2){
-	echo "<tr>";
-	echo "<td>".$key4."</td>";
-	echo "<td>".$value_all_answer2."</td>";
-	echo "</tr>";
 
-}
-echo "</table>";
+	echo "part_answer:";
+	var_dump($part_answer);
+	echo "<br>";
+
+//	for($i=0;$i<count($all_answer);$i++){
+	$counter = count($all_answer);
+
+	for($i=0;$i<$counter;$i++){
+		echo "i:".$i.":<br>";
+		if(! isset($part_answer[$i])) {
+			$part_answer[$i] = array();
+		}
+		array_push($part_answer[$i],array_shift($all_answer));
+
+	}
+	echo "<br>";
+	print_r($part_answer);
+	echo"<br>";
 
 
 /*
-	echo '</table>';
-	var_dump($right_answer);
-	echo "<br>";
-	var_dump($all_answer);
-	echo "<br>";
-	foreach ($right_answer as $key => $value_right_answer ) {
-		foreach ( $all_answer as $key => $value_all_answer ) {
-			if($value_right_answer===$value_all_answer){
-				$right_answer_count++;
-			}
-		}
-	}
+	foreach($all_answer as $key => $all_answer_value){
 
-	var_dump($right_answer_count);
-	echo "<br>";
+		//$first_answer = array_column($all_answer,$key);
+		//$part_answer[] = $first_answer;
+		//var_dump($part_answer);
+		//echo "<br>";
+
+	}
+		//var_dump($all_answer);
+		//echo "<br>";
+		///$first_ansewer = allay_column($all_answer,$key);
+		//$part_answer = $first_answer;
+		//
+		//$i++;
+/*
+		$first_answer = array_shift($all_answer);
+		var_dump($first_answer);
+		echo "<br>";
+		$part_answer[]= $first_answer;
+		var_dump($part_answer);
+		echo "<br>";
 */
 
 
 
+	//
+
+/*
+	$part_answer[] =array_shift($all_answer);
+	var_dump($all_answer);
+	echo "<br>";
+	var_dump($part_answer);
+	echo "<br>";
+	$part_answer2[]=array_shift($all_answer);
+	var_dump($all_answer);
+	echo "<br>";
+	var_dump($part_answer2);
+	echo "<br>";
+	$part_answer3[]=array_shift($all_answer);
+	var_dump($all_answer);
+	echo "<br>";
+	var_dump($part_answer3);
+	echo "<br>";
+*/
+
+
+}
+
+
+
+$answer = array_flatten($answer);
+var_dump($answer);
+//解答数集計表作成
+/*
+echo "<br>";
+//var_dump($first_answer);
+echo "<br>";
+//var_dump($answer);
+//$counter = array_count_values($first_answer);
+//$counter2 = array_count_values($first_answer4);
+echo "<br>";
+//print_r($counter);
+echo "<br>";
+//print_r($counter2);
+
+echo "<table border=2>";
+foreach($counter as $key4 => $value_all_answer2){
+	//var_dump($key4);
+	echo "<tr>";
+	echo "<td>".$key4."</td>";
+	echo "<td>".$value_all_answer2."</td>";
+
+	echo "</tr>";
+}
+
+echo "</table>";
+*/
