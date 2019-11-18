@@ -117,18 +117,22 @@ echo "</table>";
 */
 
 foreach($part_answer as $array){
-	echo "<table border=2>";
 	echo "<br>";
 	foreach($array as $key5 => $value_answer_array){
 		$syuukei = array_count_values($array);
-		echo "<tr>";
-		echo "<td>".$value_answer_array."</td>";
-		echo "<td>".$key5."</td>";
-		echo "</tr>";
-
+		echo "<br>";
+		print_r($syuukei);
 	}
-	//echo "<br>answercount";
-	//print_r($syuukei);
-	echo "</table>";
-}
+		echo "<table border=2>";
+		echo "<br>";
+		foreach($syuukei as $key6 => $value_answer_array2){
+			echo "<tr>";
+			echo "<td>".$value_answer_array2."</td>";
+			echo "<td>".$key6."</td>";
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
+
+
 
