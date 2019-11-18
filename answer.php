@@ -10,6 +10,7 @@ $i=0;
 $stmt = $dbh->query ( $sql );
 $stmt2 = $dbh->query ( $sql2 );
 $part_answer=array();
+$syuukei = array();
 $first_answer=array();
 $answer = array();
 $answer2 = array();
@@ -54,22 +55,10 @@ echo '<br>';
 echo '解答集計結果<br>';
 while ($result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 	$all_answer = explode ( ';', $result2 ['responsesummary'] );
-	$answer[]=$all_answer;
-	echo "all_answer:";
-	var_dump($all_answer);
-	echo "<br>";
+	//$answer[]=$all_answer;
 
-	echo "count";
-	var_dump(count($all_answer));
-	echo "<br>";
-
-
-	echo "part_answer:";
-	var_dump($part_answer);
-	echo "<br>";
-
-//	for($i=0;$i<count($all_answer);$i++){
 	$counter = count($all_answer);
+	//回答者数の数だけ配列を作成
 
 	for($i=0;$i<$counter;$i++){
 		echo "i:".$i.":<br>";
@@ -77,88 +66,69 @@ while ($result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 			$part_answer[$i] = array();
 		}
 		array_push($part_answer[$i],array_shift($all_answer));
+		echo"<br>";
+		$answer = array_flatten($part_answer[$i]);
+		echo "<br>syuukei";
+		print_r($answer);
+		$syuukei = array_count_values($answer);
+		echo "<br>answercount";
+		print_r($syuukei);
+		echo "<br>part_answer_show";
+		print_r($part_answer[$i]);
 
+/*
+			$syuukeicounter = count($syuukei);
+			echo "<table border=2>";
+			foreach($syuukei as $key5 => $count2){
+				echo "<tr>";
+				echo "<td>".$key5."</td>";
+				echo "<td>".$count2."</td>";
+				echo "</tr>";
+
+			}
+			echo "</table>";
+			*/
 	}
-	echo "<br>";
+
+	echo "<br>part_answer";
 	print_r($part_answer);
-	echo"<br>";
-
-
-/*
-	foreach($all_answer as $key => $all_answer_value){
-
-		//$first_answer = array_column($all_answer,$key);
-		//$part_answer[] = $first_answer;
-		//var_dump($part_answer);
-		//echo "<br>";
-
-	}
-		//var_dump($all_answer);
-		//echo "<br>";
-		///$first_ansewer = allay_column($all_answer,$key);
-		//$part_answer = $first_answer;
-		//
-		//$i++;
-/*
-		$first_answer = array_shift($all_answer);
-		var_dump($first_answer);
-		echo "<br>";
-		$part_answer[]= $first_answer;
-		var_dump($part_answer);
-		echo "<br>";
-*/
-
-
-
-	//
-
-/*
-	$part_answer[] =array_shift($all_answer);
-	var_dump($all_answer);
-	echo "<br>";
-	var_dump($part_answer);
-	echo "<br>";
-	$part_answer2[]=array_shift($all_answer);
-	var_dump($all_answer);
-	echo "<br>";
-	var_dump($part_answer2);
-	echo "<br>";
-	$part_answer3[]=array_shift($all_answer);
-	var_dump($all_answer);
-	echo "<br>";
-	var_dump($part_answer3);
-	echo "<br>";
-*/
-
+	//echo "<br>syuukei";
+	//print_r($syuukei);
 
 }
 
 
-
-$answer = array_flatten($answer);
-var_dump($answer);
-//解答数集計表作成
 /*
-echo "<br>";
-//var_dump($first_answer);
-echo "<br>";
-//var_dump($answer);
-//$counter = array_count_values($first_answer);
-//$counter2 = array_count_values($first_answer4);
-echo "<br>";
-//print_r($counter);
-echo "<br>";
-//print_r($counter2);
-
 echo "<table border=2>";
-foreach($counter as $key4 => $value_all_answer2){
-	//var_dump($key4);
+foreach($syuukei as $key4 => $value_all_answer2){
+	var_dump($key4);
+	//var_dump($value_all_answer2);
 	echo "<tr>";
 	echo "<td>".$key4."</td>";
 	echo "<td>".$value_all_answer2."</td>";
-
 	echo "</tr>";
 }
-
 echo "</table>";
+
+
+//$answer = array_flatten($part_answer);
+//var_dump($answer);
+//解答数集計表作成
 */
+
+foreach($part_answer as $array){
+	echo "<table border=2>";
+	echo "<br>";
+	foreach($array as $key5 => $value_answer_array){
+		$syuukei = array_count_values($array);
+		echo "<tr>";
+		echo "<td>".$value_answer_array."</td>";
+		echo "<td>".$key5."</td>";
+		echo "</tr>";
+
+	}
+	//echo "<br>answercount";
+	//print_r($syuukei);
+	echo "</table>";
+}
+
