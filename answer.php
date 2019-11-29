@@ -1,3 +1,16 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>小テスト集計</title>
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+</body>
+</html>
+
 <?php
 require_once ('sql.php'); // 接続
 $questionid = $_GET ['questionid'];
@@ -34,76 +47,34 @@ function array_flatten($array) {
 }
 //echo "テスト" . $testid . "<br>";
 while($result5 = $stmt0 ->fetch(PDO::FETCH_ASSOC)){
-	echo $result5['name'];
+	echo '<h1>'.$result5['name'].'</h1>';
+	echo '<h2>問題</h2>';
 	echo $result5['questiontext'];
 }
-echo "正答";
-
-//$moji="パート1:犬;パート2:猫;";
-//$replace = preg_replace('/;{0,1}パート\d+:/','aiueo',$moji);
-//var_dump($replace);
-
-// 正答表作成
-while ( $result = $stmt->fetch ( PDO::FETCH_ASSOC ) ) {
-	//echo "問題<br>";
-	//echo "<th>" . $result ['questionsummary'] . "</th>";
-	$replace = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result['rightanswer']);
-	echo '<table border=2>';
-	$right_answer = explode ( 'aiueo', $replace );
-	$res=array_shift($right_answer);
-
-	foreach ( $right_answer as $key => $value_right_answer ) {
-		echo "<tr>";
-		echo "<td>" . $value_right_answer . "</td>";
-		echo "</tr>";
-	}
-	echo '</table>';
-
-}
-
 // 解答データの分割
-echo '<br>';
-echo '解答集計結果<br>';
+
 while ( $result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 	$replace = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result2['rightanswer']);
 	$replace2 = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result2['responsesummary']);
-	//$replace = preg_replace('/;{0,1}パート \d+:/','aiueo',"パート1:犬;パート2:猫;");
-	//$replace = preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',"パート 1: ネズミ; パート 2: イヌ; パート 3: ; パート 4: ; パート 5:");
-	//print_r($replace);
-	//echo "<br>";
 	$right_answer = explode ( 'aiueo', $replace );
 	$res=array_shift($right_answer);
 	$all_answer = explode ('aiueo', $replace2 );
 	$res=array_shift($all_answer);
-	//echo "<br>解答";
-	//print_r($all_answer);
-	//echo"<br>正解";
-	//print_r($right_answer);
 
-	// $answer[]=$all_answer;
 
 	$counter = count ( $all_answer );
 
 	for($i = 0; $i < $counter; $i ++) {
-		//echo "i:" . $i . ":<br>";
 		if (! isset ( $part_answer [$i] )) {
 			$part_answer [$i] = array ();
 		}
-		if (! isset ( $right_part_answer [$i] )) {
-			$right_part_answer [$i] = array ();
-		}
 			array_push ( $part_answer [$i], array_shift ( $all_answer ) );
-			//echo "<br>part_answer";
-			//print_r ( $part_answer );
-		//echo "<br>";
 	}
 
-
-	//echo "<br>right_answer";
-	//print_r ( $right_part_answer );
 }
 // 解答数集計表作成
-
+echo '<h3>解答集計</h3>';
+echo '正答：<span class="yellow">黄色</span>　解答率20％以上：<span class="red">赤</span>　解答無し:<span class="blue">青</span>';
 foreach ( $part_answer as $array ) {
 	echo "<br>";
 	foreach ( $array as $key5 => $value_answer_array ) {
@@ -111,38 +82,32 @@ foreach ( $part_answer as $array ) {
 		$syuukei = array_count_values ($array);
 		arsort($syuukei);
 
-		//array_flip($syuukei);
-		//echo "<br>";
-		//print_r ($syuukei);
 	}
 	while($result2 = $stmt2->fetch ( PDO::FETCH_ASSOC )){
 		$replace = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result2['rightanswer']);
 		$right_answer = explode ( 'aiueo', $replace );
 		$res=array_shift($right_answer);
 	}
-	print_r($right_answer);
+
 	$res=array_shift($right_answer);
-	echo "<br>res";
-	print_r($res);
 	$n++;
-	echo "<table border=2>";
-	echo "<br>";
-	echo '#'.$n;
+	echo "<table>";
+	echo '<caption>#'.$n.'正答:'.$res.'</caption>';
+	//echo "<br>";
+	echo '<thead>';
 	echo '<tr>';
 	echo '<th>解答結果</th>';
 	echo '<th>解答人数</th>';
 	echo '<th>割合</th>';
 	echo '</tr>';
+	echo '</thead>';
 
-
+	echo '<tbody>';
 	foreach ( $syuukei as $value_answer => $answer_count ) {
 		foreach($right_answer as $key => $value_right_answer){
-			//if((strcmp($res,$value_answer))==0){
-				//echo '<tr bgcolor="yellow">';
-			//}
 		}
 		if((strcmp($res,$value_answer))==0){
-			echo '<tr bgcolor="yellow">';
+			echo '<tr bgcolor="#FFFF99 	">';
 		}
 		if($value_answer==" "){
 			echo '<tr bgcolor="skyblue">';
@@ -150,19 +115,21 @@ foreach ( $part_answer as $array ) {
 			echo '<tr bgcolor="pink">';
 		}
 		if((strcmp($res,$value_answer))==0){
-			echo '<tr bgcolor="yellow">';
+			echo '<tr bgcolor="#FFFF99 	">';
 		}
-
-
 
 		echo "<td>" . $value_answer . "</td>";
 		echo "<td>" . $answer_count. "人</td>";
 		echo "<td>".floor((($answer_count/$people)*100))."%</td>";
 		echo "</tr>";
 	}
-
+	echo '</tbody>';
 	echo "</table>";
 }
+
+
+
+?>
 
 
 

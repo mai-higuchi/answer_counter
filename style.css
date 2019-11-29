@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+table {
+	border-collapse:collapse;
+	width: 500px;
+}
+th{
+	background:#F0F8FF;
+}
+td,th{
+	border:1px solid #000000;
+}
+table td:nth-child(2),td:nth-child(3){
+	text-align:right;
+}
+caption{
+	font-size:18px;
+	font-weight:bold;
+}
+.yellow{
+	color:#FFCC33;
+	font-weight:bold;
+}
+.red{
+	color:#FF9999;
+	font-weight:bold;
+}
+.blue{
+	color:#33CCFF;
+	font-weight:bold;
+}
