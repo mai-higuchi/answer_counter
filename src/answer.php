@@ -61,7 +61,6 @@ while ( $result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 	$all_answer = explode ('aiueo', $replace2 );
 	$res=array_shift($all_answer);
 
-
 	$counter = count ( $all_answer );
 
 	for($i = 0; $i < $counter; $i ++) {
@@ -70,8 +69,10 @@ while ( $result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 		}
 			array_push ( $part_answer [$i], array_shift ( $all_answer ) );
 	}
-
+	print_r($right_answer);
 }
+
+
 // 解答数集計表作成
 echo '<h3>解答集計</h3>';
 echo '正答：<span class="yellow">黄色</span>　解答率20％以上：<span class="red">赤</span>　解答無し:<span class="blue">青</span>';
