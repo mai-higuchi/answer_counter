@@ -38,11 +38,13 @@ while($result=$stmt2->fetch(PDO::FETCH_ASSOC)){
 	//echo 'oeiua';
 	echo '<tr>';
 	echo '<td>'.$result['shortname'].'</td>';
-	echo '<td><a href="answer.php?home='.$result['id'].'">詳細</td>';
+	echo '<td><a href="src/home.php?cid='.$result['id'].'">詳細</td>';
 	echo "</tr>";
+
 
 
 }
 echo "</table>";
+
 
 ?>
