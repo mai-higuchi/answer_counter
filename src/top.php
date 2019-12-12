@@ -1,6 +1,7 @@
 <?php
 require_once ('sql.php');
 //$uid = $_POST['uid'];
+var_dump($_SESSION);
 $sql = "SELECT * FROM mdl_user WHERE username='{$uid}'";
 $stmt = $dbh->prepare ($sql);
 $stmt->execute();
@@ -38,7 +39,7 @@ while($result=$stmt2->fetch(PDO::FETCH_ASSOC)){
 	//echo 'oeiua';
 	echo '<tr>';
 	echo '<td>'.$result['shortname'].'</td>';
-	echo '<td><a href="src/home.php?cid='.$result['id'].'">詳細</td>';
+	echo '<td><a href="?do=home&cid='.$result['id'].'">詳細</td>';
 	echo "</tr>";
 
 

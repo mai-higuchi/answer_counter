@@ -13,6 +13,7 @@
 
 <?php
 require_once ('sql.php'); // 接続
+
 $questionid = $_GET ['questionid'];
 //$testid = $_GET ['testid']; // id取得
 
@@ -31,6 +32,7 @@ $syuukei = array ();
 $answer = array ();
 $n=0;
 // 解答データをすべて配列の中に入れるメソッド
+/*
 function array_flatten($array) {
 	if (! is_array ( $array )) {
 		return FALSE;
@@ -44,6 +46,13 @@ function array_flatten($array) {
 		}
 	}
 	return $result;
+}*/
+function h($array) {
+	if ( is_array($array) ) {
+		return array_map( 'h', $array );
+	} else {
+		return htmlspecialchars( $array, ENT_QUOTES, 'UTF-8' );
+	}
 }
 //echo "テスト" . $testid . "<br>";
 while($result5 = $stmt0 ->fetch(PDO::FETCH_ASSOC)){
@@ -57,6 +66,13 @@ while ( $result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 	$replace = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result2['rightanswer']);
 	$replace2 = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result2['responsesummary']);
 	$right_answer = explode ( 'aiueo', $replace );
+
+	foreach($right_answer as $key => $value){
+		$right_answer[$value] = htmlspecialchars($key,EMT_QUOTES);
+	}
+
+
+
 	$res=array_shift($right_answer);
 	$all_answer = explode ('aiueo', $replace2 );
 	$res=array_shift($all_answer);
@@ -69,19 +85,25 @@ while ( $result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 		}
 			array_push ( $part_answer [$i], array_shift ( $all_answer ) );
 	}
-	print_r($right_answer);
+	$right_answer=h($right_answer);
+	//print_r($right_answer);
+
+
 }
 
+$part_answer=h($part_answer);
+//print_r($part_answer);
 
 // 解答数集計表作成
 echo '<h3>解答集計</h3>';
-echo '正答：<span class="yellow">黄色</span>　解答率20％以上：<span class="red">赤</span>　解答無し:<span class="blue">青</span>';
+echo '正答：<span class="green">緑</span>　解答率20％以上：<span class="red">赤</span>';
 foreach ( $part_answer as $array ) {
 	echo "<br>";
 	foreach ( $array as $key5 => $value_answer_array ) {
 		$people = count($array);
 		$syuukei = array_count_values ($array);
 		arsort($syuukei);
+		//var_dump($syuukei);
 
 	}
 	while($result2 = $stmt2->fetch ( PDO::FETCH_ASSOC )){
@@ -108,15 +130,16 @@ foreach ( $part_answer as $array ) {
 		foreach($right_answer as $key => $value_right_answer){
 		}
 		if((strcmp($res,$value_answer))==0){
-			echo '<tr bgcolor="#FFFF99 	">';
+			echo '<tr bgcolor="#33FF66">';
 		}
-		if($value_answer==" "){
-			echo '<tr bgcolor="skyblue">';
-		}else if(floor((($answer_count/$people)*100))>=20){
+		//if($value_answer==" "){
+			//echo '<tr bgcolor="#EEEEEE">';
+		//}
+		else if(floor((($answer_count/$people)*100))>=20){
 			echo '<tr bgcolor="pink">';
 		}
 		if((strcmp($res,$value_answer))==0){
-			echo '<tr bgcolor="#FFFF99 	">';
+			echo '<tr bgcolor="#33FF66">';
 		}
 
 		echo "<td>" . $value_answer . "</td>";

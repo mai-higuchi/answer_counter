@@ -1,6 +1,13 @@
 <?php
 require_once ('sql.php');
+//include ('header.php');
+//$uid = $_SESSION['uid'];
+//$lastname = $_SESSION['lastnmae'];
+//$firstname = $_SESSION['firstname'];
+var_dump($_SESSION);
 $cid = $_GET['cid'];
+$uid = $_GET['uid'];
+var_dump($cid);
 
 
 $sql = "SELECT DISTINCT
@@ -24,7 +31,7 @@ echo "<table border=2>";
 while ($result = $stmt->fetch ( PDO::FETCH_ASSOC ) ) {
 	echo '<tr>';
 	echo '<td>'.$result['name'].'</td>';
-	echo '<td><a href="answer.php?questionid='.$result['questionid'].'">詳細</td>';
+	echo '<td><a href="?do=answer&questionid='.$result['questionid'].'">詳細</td>';
 	echo "</tr>";
 }
 echo "</table>";

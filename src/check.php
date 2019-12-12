@@ -3,7 +3,7 @@
 <meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8"></head>
 <body>
 <?php
-session_start();
+//session_start();
 require_once ('sql.php');
   $uid = $_POST['uid'] ;  //ログイン画面より送信されたユーザID
   $pass = $_POST['pass'];  //ログイン画面より送信されたパスワード
@@ -27,16 +27,15 @@ require_once ('sql.php');
   	//echo 'aiueo';
   	if(password_verify($pass,$result['password'])){
   		$_SESSION['uid']=$uid;
+
   		header('Location:../p_index.php');
 
-
   	}else{
-  		echo '<h2>ログイン失敗<h2>';
-
+  		header('Location:login.html');
   	}
   }
 
-  var_dump($test);
+ // var_dump($test);
 
 
   //if ($row){ //問合せ結果がある場合、ログイン成功
