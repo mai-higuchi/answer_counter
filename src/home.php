@@ -8,8 +8,6 @@ var_dump($_SESSION);
 $cid = $_GET['cid'];
 $uid = $_GET['uid'];
 var_dump($cid);
-
-
 $sql = "SELECT DISTINCT
 c.fullname,q.name,q.id,qs.questionid
 FROM
@@ -20,14 +18,9 @@ WHERE
 q.course = c.id AND
 q.id = qs.quizid AND
 c.id = '{$cid}'";
-
 $stmt = $dbh->query ( $sql );
-
-
 echo "<th>小テスト選択</th>";
-
 echo "<table border=2>";
-
 while ($result = $stmt->fetch ( PDO::FETCH_ASSOC ) ) {
 	echo '<tr>';
 	echo '<td>'.$result['name'].'</td>';

@@ -13,10 +13,8 @@
 
 <?php
 require_once ('sql.php'); // 接続
-
 $questionid = $_GET ['questionid'];
 //$testid = $_GET ['testid']; // id取得
-
 // SQL
 $sql0 = "SELECT DISTINCT questionid,a.id,questiontext,parent,name FROM mdl_question a,mdl_question_attempts b
 WHERE parent = 0 AND a.id=b.questionid AND questionid=$questionid";
@@ -61,24 +59,17 @@ while($result5 = $stmt0 ->fetch(PDO::FETCH_ASSOC)){
 	echo $result5['questiontext'];
 }
 // 解答データの分割
-
 while ( $result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 	$replace = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result2['rightanswer']);
 	$replace2 = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result2['responsesummary']);
 	$right_answer = explode ( 'aiueo', $replace );
-
 	foreach($right_answer as $key => $value){
 		$right_answer[$value] = htmlspecialchars($key,EMT_QUOTES);
 	}
-
-
-
 	$res=array_shift($right_answer);
 	$all_answer = explode ('aiueo', $replace2 );
 	$res=array_shift($all_answer);
-
 	$counter = count ( $all_answer );
-
 	for($i = 0; $i < $counter; $i ++) {
 		if (! isset ( $part_answer [$i] )) {
 			$part_answer [$i] = array ();
@@ -87,13 +78,9 @@ while ( $result2 = $stmt2->fetch ( PDO::FETCH_ASSOC ) ) {
 	}
 	$right_answer=h($right_answer);
 	//print_r($right_answer);
-
-
 }
-
 $part_answer=h($part_answer);
 //print_r($part_answer);
-
 // 解答数集計表作成
 echo '<h3>解答集計</h3>';
 echo '正答：<span class="green">緑</span>　解答率20％以上：<span class="red">赤</span>';
@@ -104,14 +91,12 @@ foreach ( $part_answer as $array ) {
 		$syuukei = array_count_values ($array);
 		arsort($syuukei);
 		//var_dump($syuukei);
-
 	}
 	while($result2 = $stmt2->fetch ( PDO::FETCH_ASSOC )){
 		$replace = 	preg_replace('/;{0,1} {0,1}パート \d+:/','aiueo',$result2['rightanswer']);
 		$right_answer = explode ( 'aiueo', $replace );
 		$res=array_shift($right_answer);
 	}
-
 	$res=array_shift($right_answer);
 	$n++;
 	echo "<table>";
@@ -124,7 +109,6 @@ foreach ( $part_answer as $array ) {
 	echo '<th>割合</th>';
 	echo '</tr>';
 	echo '</thead>';
-
 	echo '<tbody>';
 	foreach ( $syuukei as $value_answer => $answer_count ) {
 		foreach($right_answer as $key => $value_right_answer){
@@ -141,7 +125,6 @@ foreach ( $part_answer as $array ) {
 		if((strcmp($res,$value_answer))==0){
 			echo '<tr bgcolor="#33FF66">';
 		}
-
 		echo "<td>" . $value_answer . "</td>";
 		echo "<td>" . $answer_count. "人</td>";
 		echo "<td>".floor((($answer_count/$people)*100))."%</td>";
@@ -150,9 +133,6 @@ foreach ( $part_answer as $array ) {
 	echo '</tbody>';
 	echo "</table>";
 }
-
-
-
 ?>
 
 
