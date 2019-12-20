@@ -1,3 +1,15 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>科目選択</title>
+    <link rel="stylesheet" href="css/style.css" />
+
+</head>
+<body>
+
+</body>
+</html>
 <?php
 require_once ('sql.php');
 $uid = $_SESSION['uid'];
@@ -10,7 +22,8 @@ $sql2 = "SELECT distinct c.id,
                 c.shortname,
                 u.username,
                 u.lastname,
-                u.firstname
+                u.firstname,
+                ra.roleid
 FROM mdl_course as c,
      mdl_role_assignments AS ra,
      mdl_role AS r,
@@ -29,15 +42,22 @@ $stmt2->execute();
 //while($result=$stmt->fetch(PDO::FETCH_ASSOC)){
 	//echo "こんにちは".$result['lastname'].$result['firstname']."さん";
 //}
+
+
+
 //var_dump($stmt2);
-echo "<th>科目選択</th>";
+echo "<h2>科目選択</h2>";
 echo "<table border=2>";
 while($result=$stmt2->fetch(PDO::FETCH_ASSOC)){
+	if($result['roleid']==3){
+		echo '<tr>';
+		echo '<td>'.$result['shortname'].'</td>';
+		echo '<td><a href="?do=test&cid='.$result['id'].'">詳細</td>';
+		echo "</tr>";
+	}
 	//echo 'oeiua';
-	echo '<tr>';
-	echo '<td>'.$result['shortname'].'</td>';
-	echo '<td><a href="?do=home&cid='.$result['id'].'">詳細</td>';
-	echo "</tr>";
+
 }
+
 echo "</table>";
 ?>

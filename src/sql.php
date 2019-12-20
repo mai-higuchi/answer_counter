@@ -13,3 +13,6 @@ try {
     //echo "接続失敗: " . $e->getMessage() . "\n";
     exit();
 }
+$conn = mysqli_connect("localhost","root","i=Hj4VLvdb");//MySQLサーバへ接続
+mysqli_select_db($conn,"moodle");    // 使用するデータベースを指定
+mysqli_query($conn,'set names utf8'); //文字コードをutf8に設定（文字化け対策）
